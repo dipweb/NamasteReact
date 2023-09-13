@@ -18,3 +18,22 @@ Testing
 - Differential Bundling -- Support Older
 - Tree Shaking
 - Different build for dev and prod
+
+  \*header
+
+  - Logo
+  - Navbar
+
+  \*body
+
+  - Search bar
+  - RestaurantContainer
+    --Restaurant card
+    --Img
+    -- Name of restaurant, Start Rating, cusine tie
+
+  \*footer
+  -copyright
+  -Address
+
+  - contact
