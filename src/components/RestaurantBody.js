@@ -2,6 +2,7 @@ import RestaurantCard from "./RestaurantCard";
 import { useEffect, useRef, useState } from "react";
 import { FOOD_CART_URL } from "../util/contants";
 import SimmerUI from "./SimmerUI";
+import { Link } from "react-router-dom";
 
 const RestaurantBody = () => {
   useRef();
@@ -77,7 +78,12 @@ const RestaurantBody = () => {
       <div className="restaurantContainer">
         {filteredRestaurantData.map((restaurant) => {
           return (
-            <RestaurantCard key={restaurant.info.id} restaurant={restaurant} />
+            <Link
+              key={restaurant.info.id}
+              to={"/restaurant/" + restaurant.info.id}
+            >
+              <RestaurantCard restaurant={restaurant} />
+            </Link>
           );
         })}
       </div>
