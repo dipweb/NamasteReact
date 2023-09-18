@@ -1,4 +1,8 @@
-:root {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* :root {
   --light-orange: rgba(255, 166, 0, 0.832);
 }
 
@@ -84,4 +88,4 @@ button:hover {
 .simmerUI {
   width: 180px;
   height: 232px;
-}
+} */

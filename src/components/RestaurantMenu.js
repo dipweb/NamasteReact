@@ -1,52 +1,58 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import SimmerUI from "./SimmerUI";
-import { MENU_API_URL } from "../util/contants";
+import MenuList from "./MenuList";
+
 import { useParams } from "react-router-dom";
+import useFetchRestaurant from "../util/useFetchRestaurant";
 
 const RestaurantMenu = () => {
-  const [restrestaurantInfo, setRestaurantInfo] = useState([]);
-  const [menuLists, setMenuLists] = useState([]);
   const { restId } = useParams();
+  const [itemIndex, setItemIndex] = useState(null);
+  const restInfo = useFetchRestaurant(restId);
 
-  // const [restaurantInfo,setrestaurantInfo]= useState({})
-  useEffect(() => {
-    fetchRestMunu();
-  }, []);
-
-  const fetchRestMunu = async () => {
-    const data = await fetch(MENU_API_URL + restId);
-    const json = await data.json();
-
-    console.log(json?.data?.cards[0]?.card?.card?.info);
-    console.log(
-      json?.data?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card
-        ?.card?.itemCards
-    );
-
-    const restaurantInfo = json?.data?.cards[0]?.card?.card?.info;
-
-    const menuLists =
-      json?.data?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card
-        ?.card?.itemCards;
-
-    setRestaurantInfo(restaurantInfo);
-    setMenuLists(menuLists);
-  };
-
-  if (restrestaurantInfo.length === 0) {
+  if (restInfo === null) {
     return <SimmerUI />;
   }
 
+  const { name, avgRating, costForTwoMessage } =
+    restInfo?.data?.cards[0]?.card?.card?.info;
+  console.log(restInfo?.data?.cards[0]?.card?.card?.info);
+  const menuLists =
+    restInfo?.data?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter(
+      (item) => {
+        if (
+          item?.card.card["@type"] ===
+          "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
+        ) {
+          return item;
+        }
+      }
+    );
+
   return (
     <div>
-      <h1>{restrestaurantInfo.name}</h1>
+      <div className="my-6 flex flex-col justify-center items-center">
+        <p className="font-bold mb-2">
+          {name} <span>({avgRating})</span>
+        </p>
+        <p className="">Cost for two : {costForTwoMessage}</p>
+      </div>
+
       <ul>
-        {menuLists?.map((menu) => {
+        {menuLists.map((menu, index) => {
           return (
-            <li>
-              <span> {menu.card.info.name}</span>
-              <span>{"( " + menu.card.info.price / 100 + "Rupees )"}</span>
-            </li>
+            <MenuList
+              key={index}
+              data={menu}
+              showItems={itemIndex == index ? true : false}
+              setItemIndex={() => {
+                if (itemIndex === index) {
+                  setItemIndex(null);
+                } else {
+                  setItemIndex(index);
+                }
+              }}
+            />
           );
         })}
       </ul>
